@@ -1,9 +1,9 @@
 package com.sparta.blog.service;
 
-import com.sparta.blog.dto.request.CommentRequestDto;
-import com.sparta.blog.dto.request.PostRequestDto;
-import com.sparta.blog.dto.response.CommentResponseDto;
-import com.sparta.blog.dto.response.PostResponseDto;
+import com.sparta.blog.dto.comment.CommentRequestDto;
+import com.sparta.blog.dto.comment.CommentResponseDto;
+import com.sparta.blog.dto.post.PostRequestDto;
+import com.sparta.blog.dto.post.PostResponseDto;
 import com.sparta.blog.entity.Comment;
 import com.sparta.blog.entity.Post;
 import com.sparta.blog.repository.CommentRepository;
@@ -24,7 +24,7 @@ public class AdminService {
     @Transactional
     public PostResponseDto updatePostByAdmin(Long postId, PostRequestDto requestDto) {
         Post post = postRepository.findById(postId).orElseThrow(
-                () -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다.")
+                () -> new IllegalArgumentException("Not found post")
         );
         post.update(requestDto);
         return new PostResponseDto(post);
@@ -32,19 +32,19 @@ public class AdminService {
 
     public ResponseEntity<String> deletePostByAdmin(Long id) {
         Post post = postRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다.")
+                () -> new IllegalArgumentException("Not found post")
         );
         postRepository.deleteById(id);
-        return new ResponseEntity<>("삭제 성공!", HttpStatus.OK);
+        return new ResponseEntity<>("Success delete post", HttpStatus.OK);
     }
 
     @Transactional
     public void deleteCommentByAdmin(Long postId, Long commentId) {
         Post post = postRepository.findById(postId).orElseThrow(
-                () -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다.")
+                () -> new IllegalArgumentException("Not found post")
         );
         Comment comment = commentRepository.findById(commentId).orElseThrow(
-                () -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다.")
+                () -> new IllegalArgumentException("Not found comment")
         );
         commentRepository.delete(comment);
     }
@@ -53,10 +53,10 @@ public class AdminService {
     public CommentResponseDto updateCommentByAdmin(Long postId, Long commentId, CommentRequestDto requestDto) {
 
         Post post = postRepository.findById(postId).orElseThrow(
-                () -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다.")
+                () -> new IllegalArgumentException("Not found post")
         );
         Comment comment = commentRepository.findById(commentId).orElseThrow(
-                () -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다.")
+                () -> new IllegalArgumentException("Not found comment")
         );
         comment.updateComment(requestDto);
         return new CommentResponseDto(comment);

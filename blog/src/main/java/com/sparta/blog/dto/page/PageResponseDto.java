@@ -1,9 +1,9 @@
-package com.sparta.blog.dto.request;
+package com.sparta.blog.dto.page;
 
 import lombok.Getter;
 
 @Getter
-public class PageRequestDTO {
+public class PageResponseDto {
 
     private int page;
     private int size;

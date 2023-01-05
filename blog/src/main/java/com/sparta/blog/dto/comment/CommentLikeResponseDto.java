@@ -1,4 +1,4 @@
-package com.sparta.blog.dto.response;
+package com.sparta.blog.dto.comment;
 
 import com.sparta.blog.entity.CommentLike;
 import lombok.Getter;

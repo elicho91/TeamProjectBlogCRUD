@@ -1,4 +1,4 @@
-package com.sparta.blog.dto;
+package com.sparta.blog.dto.security;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

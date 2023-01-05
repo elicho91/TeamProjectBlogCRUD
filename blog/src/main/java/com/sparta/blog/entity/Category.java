@@ -1,14 +1,10 @@
-package com.sparta.blog.category;
+package com.sparta.blog.entity;
 
-import com.sparta.blog.entity.Post;
-import jakarta.persistence.Entity;
+import com.sparta.blog.dto.category.CategoryRequestDto;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Category Package Writer By Park
@@ -34,8 +30,8 @@ public class Category {
         this.layer = layer;
     }
 
-    public Category(CategoryRequest categoryRequest) {
-        this.name = categoryRequest.getName();
+    public Category(CategoryRequestDto categoryRequestDto) {
+        this.name = categoryRequestDto.getName();
     }
 
 }

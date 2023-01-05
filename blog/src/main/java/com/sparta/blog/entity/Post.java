@@ -1,7 +1,6 @@
 package com.sparta.blog.entity;
 
-import com.sparta.blog.category.Category;
-import com.sparta.blog.dto.request.PostRequestDto;
+import com.sparta.blog.dto.post.PostRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

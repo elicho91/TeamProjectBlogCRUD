@@ -1,4 +1,4 @@
-package com.sparta.blog.dto.response;
+package com.sparta.blog.dto.user;
 
 import com.sparta.blog.entity.UserRoleEnum;
 import lombok.Getter;

@@ -1,6 +1,6 @@
 package com.sparta.blog.jwt;
 
-import com.sparta.blog.dto.response.AuthenticatedUser;
+import com.sparta.blog.dto.user.AuthenticatedUser;
 import com.sparta.blog.entity.UserRoleEnum;
 import com.sparta.blog.security.UserDetailsServiceImpl;
 import io.jsonwebtoken.*;
@@ -15,9 +15,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
+
 import java.security.Key;
-import java.util.Date;
 import java.util.Base64;
+import java.util.Date;
 
 
 /**

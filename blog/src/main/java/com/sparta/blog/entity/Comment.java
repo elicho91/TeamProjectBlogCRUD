@@ -1,6 +1,6 @@
 package com.sparta.blog.entity;
 
-import com.sparta.blog.dto.request.CommentRequestDto;
+import com.sparta.blog.dto.comment.CommentRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,7 +26,7 @@ public class Comment extends Timestamped {
     @JoinColumn (name = "post_id")
     private Post post;
 
-    private String writer;
+    private String username;
 
     @OneToMany(mappedBy = "comment", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<CommentLike> commentLikes = new ArrayList<>();
@@ -54,7 +54,7 @@ public class Comment extends Timestamped {
 
 
     public Comment(CommentRequestDto commentRequest, User user, Post post,int deps, int refOrder, Comment parent) {
-        this.writer = user.getUsername(); //코맨트 작성자 정보
+        this.username = user.getUsername(); //코맨트 작성자 정보
         this.contents = commentRequest.getContents();
         this.post = post;   //ref
         this.deps = deps;
@@ -65,7 +65,7 @@ public class Comment extends Timestamped {
 
     }
     public Comment(CommentRequestDto commentRequest, User user, Post post,int deps, int refOrder,int ref) {
-        this.writer = user.getUsername(); //코맨트 작성자 정보
+        this.username = user.getUsername(); //코맨트 작성자 정보
         this.contents = commentRequest.getContents();
         this.post = post;   //ref
         this.deps = deps;
@@ -81,6 +81,6 @@ public class Comment extends Timestamped {
     }
 
     public boolean isCommentWriter(String inputUsername) {
-        return this.writer.equals(inputUsername);
+        return this.username.equals(inputUsername);
     }
 }

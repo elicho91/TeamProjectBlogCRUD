@@ -1,4 +1,4 @@
-package com.sparta.blog.dto.response;
+package com.sparta.blog.dto.comment;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sparta.blog.entity.Comment;
@@ -13,7 +13,7 @@ import java.util.List;
 @Getter
 public class CommentResponseDto {
     private Long id;
-    private String writer;
+    private String username;
     private String contents;
     private LocalDateTime modifiedAt;
     private LocalDateTime createdAt;
@@ -50,7 +50,7 @@ public class CommentResponseDto {
     public void addDTO(Post post, int i){
         //그대로 삽입
         this.id = post.getComments().get(i).getId();
-        this.writer = post.getComments().get(i).getWriter();
+        this.username = post.getComments().get(i).getUsername();
         this.contents = post.getComments().get(i).getContents();
 
         this.commentLikesCount = post.getComments().get(i).getCommentLikes().size();

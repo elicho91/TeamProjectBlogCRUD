@@ -1,6 +1,5 @@
 package com.sparta.blog.config;
 
-import com.sparta.blog.entity.UserRoleEnum;
 import com.sparta.blog.exception.CustomAccessDeniedHandler;
 import com.sparta.blog.exception.CustomAuthenticationEntryPoint;
 import com.sparta.blog.jwt.JwtAuthFilter;
@@ -69,10 +68,10 @@ public class WebSecurityConfig {
         http.authorizeHttpRequests()
                 .requestMatchers("/api/users/**").permitAll()
                 .requestMatchers("/api/posts/**").permitAll()
-                .requestMatchers("/api/categories/**").hasRole("ADMIN")
+                .requestMatchers("/api/categories/**").permitAll()
                 .requestMatchers("/swagger-ui/**").permitAll()
                 .requestMatchers("/v3/api-docs/**").permitAll()
-                .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                .requestMatchers("/admin/**").hasRole("ADMIN")
                 //Swagger set up
                 //Writer By Park
                 .anyRequest().authenticated()

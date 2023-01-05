@@ -1,11 +1,11 @@
 package com.sparta.blog.service;
 
-import com.sparta.blog.dto.request.SigninRequestDto;
-import com.sparta.blog.dto.request.SignupRequestDto;
+import com.sparta.blog.dto.jwt.TokenResponseDto;
+import com.sparta.blog.dto.user.SigninRequestDto;
+import com.sparta.blog.dto.user.SignupRequestDto;
 import com.sparta.blog.entity.User;
 import com.sparta.blog.entity.UserRoleEnum;
 import com.sparta.blog.jwt.JwtUtil;
-import com.sparta.blog.dto.response.TokenResponseDto;
 import com.sparta.blog.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,14 +32,14 @@ public class UserService {
         //회원 중복 확인
         Optional<User> found = userRepository.findByUsername(username);
         if (found.isPresent()) {
-            throw new IllegalArgumentException("중복된 사용자가 존재합니다.");
+            throw new IllegalArgumentException("Duplicated user");
         }
 
         // 사용자 role 확인
         UserRoleEnum role = UserRoleEnum.USER;
         if (signupRequestDto.isAdmin()) {
             if (!signupRequestDto.getAdminToken().equals(ADMIN_TOKEN)) {
-                throw new IllegalArgumentException("관리자 암호가 틀렸습니다.");
+                throw new IllegalArgumentException("Wrong admin password");
             }
             role = UserRoleEnum.ADMIN;
         }
@@ -60,11 +60,11 @@ public class UserService {
         String password = signinRequestDto.getPassword();
         // 사용자 확인
         User user = userRepository.findByUsername(username).orElseThrow(
-                () -> new IllegalArgumentException("미등록 사용자입니다.")
+                () -> new IllegalArgumentException("Not found user")
         );
         // 비밀번호 확인
         if (!passwordEncoder.matches(password, user.getPassword())) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+            throw new IllegalArgumentException("Wrong password");
         }
         String accessToken = jwtUtil.createToken(user.getUsername(), user.getRole());
         String refreshToken1 = jwtUtil.refreshToken(user.getUsername(), user.getRole());
@@ -89,15 +89,16 @@ public class UserService {
     public boolean deleteUser(Long id, User user) {
         //포스트 존재 여부 확인
         User users = userRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("Invalid User"));
+                () -> new IllegalArgumentException("Not found user"));
         if (users.isWriter(user.getUsername()) || UserRoleEnum.ADMIN == user.getRole()) {
             userRepository.deleteById(id);
             return true;
         } else {
-            throw new IllegalArgumentException("Invalid Writer");
+            throw new IllegalArgumentException("Invalid user");
         }
     }
 
+    ////
     public User findByUsername(String name) {
         return userRepository.findByUsername(name).orElseThrow();
     }

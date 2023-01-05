@@ -1,15 +1,14 @@
 package com.sparta.blog.service;
 
-import com.sparta.blog.category.Category;
-import com.sparta.blog.category.CategoryRepository;
-import com.sparta.blog.dto.request.PageRequestDTO;
-import com.sparta.blog.dto.request.PostRequestDto;
-import com.sparta.blog.dto.response.PostResponseDto;
+import com.sparta.blog.dto.page.PageResponseDto;
+import com.sparta.blog.dto.post.PostRequestDto;
+import com.sparta.blog.dto.post.PostResponseDto;
+import com.sparta.blog.entity.Category;
 import com.sparta.blog.entity.Post;
 import com.sparta.blog.entity.PostLike;
+import com.sparta.blog.repository.CategoryRepository;
 import com.sparta.blog.repository.PostLikeRepository;
 import com.sparta.blog.repository.PostRepository;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -49,7 +48,7 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public List<PostResponseDto> getPagingPost(PageRequestDTO dto) {
+    public List<PostResponseDto> getPagingPost(PageResponseDto dto) {
         int page = dto.getPage()-1;
         int size = dto.getSize();
         String sortBy = dto.getSortBy();
@@ -66,22 +65,13 @@ public class PostService {
             postResponseDto.add(postListDTO);
         }
         return postResponseDto;
-        //요청할때 꼭 바디부분을 신경써주세요
-        /*  양식
-            {
-            "page" : 2,
-            "size" : 2,
-            "sortBy" : "id",
-            "isAsc" : true
-            }
-         */
 
     }
 
     @Transactional(readOnly = true)
-    public PostResponseDto getPosts(Long id) {
+    public PostResponseDto getPost(Long id) {
         Post post = postRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다.")
+                () -> new IllegalArgumentException("Not found post")
         );
         return new PostResponseDto(post);
     }
@@ -89,7 +79,7 @@ public class PostService {
     @Transactional
     public PostResponseDto updatePost(Long id, PostRequestDto requestDto, String username) {
         Post post = postRepository.findByIdAndUsername(id, username).orElseThrow(
-                () -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다.")
+                () -> new IllegalArgumentException("Not found post")
         );
         post.update(requestDto);
         return new PostResponseDto(post);
@@ -98,27 +88,27 @@ public class PostService {
     @Transactional
     public ResponseEntity<String> deletePost(Long id, String username) {
         Post post = postRepository.findByIdAndUsername(id, username).orElseThrow(
-                () -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다.")
+                () -> new IllegalArgumentException("Not found post")
         );
         postRepository.deleteById(id);
-        return new ResponseEntity<>("해당 게시글이 삭제되었습니다.", HttpStatus.OK);
+        return new ResponseEntity<>("Not found post", HttpStatus.OK);
     }
 
     @Transactional
     public ResponseEntity<String> likePost(Long id, String username) {
         Post post = postRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다.")
+                () -> new IllegalArgumentException("Not found post")
         );
         postLikeRepository.save(new PostLike(username, post));
-        return new ResponseEntity<>("You liked the post", HttpStatus.OK);
+        return new ResponseEntity<>("Success like post", HttpStatus.OK);
     }
 
     @Transactional
     public ResponseEntity<String> cancelLikedPost(Long id, String username) {
         Post post = postRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다.")
+                () -> new IllegalArgumentException("Not found post")
         );
         postLikeRepository.deleteByPostIdAndUsername(id, username);
-        return new ResponseEntity<>("You canceled the like on the post", HttpStatus.OK);
+        return new ResponseEntity<>("Cancel like post", HttpStatus.OK);
     }
 }

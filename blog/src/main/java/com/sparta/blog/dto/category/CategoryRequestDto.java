@@ -1,4 +1,4 @@
-package com.sparta.blog.category;
+package com.sparta.blog.dto.category;
 
 
 import lombok.AllArgsConstructor;
@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CategoryRequest {
+public class CategoryRequestDto {
     private String name;
 }

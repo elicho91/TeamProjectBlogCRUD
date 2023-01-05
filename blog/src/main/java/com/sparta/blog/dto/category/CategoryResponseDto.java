@@ -1,5 +1,6 @@
-package com.sparta.blog.category;
+package com.sparta.blog.dto.category;
 
+import com.sparta.blog.entity.Category;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,23 +11,23 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CategoryResponse {
+public class CategoryResponseDto {
     private Long id;
     private String name;
     private int layer;
-    private List<CategoryResponse> children;
+    private List<CategoryResponseDto> children;
 
-    public CategoryResponse(Category parentCategory, List<Category> listAllcategory) {
+    public CategoryResponseDto(Category parentCategory, List<Category> listAllcategory) {
         this.id = parentCategory.getId();
         this.name = parentCategory.getName();
         this.layer = parentCategory.getLayer();
 
-        List<CategoryResponse> categoryResponses = new ArrayList<>();
+        List<CategoryResponseDto> categoryResponsDtos = new ArrayList<>();
         for (Category ca : listAllcategory){
             if (parentCategory.getLayer() + 1 == ca.getLayer() && ca.getParent().equals(parentCategory.getName())) {
-                categoryResponses.add(new CategoryResponse(ca,listAllcategory));
+                categoryResponsDtos.add(new CategoryResponseDto(ca,listAllcategory));
             }
-            this.children = categoryResponses;
+            this.children = categoryResponsDtos;
         }
     }
 }

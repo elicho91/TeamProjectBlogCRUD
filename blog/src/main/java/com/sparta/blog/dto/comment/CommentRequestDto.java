@@ -1,4 +1,4 @@
-package com.sparta.blog.dto.request;
+package com.sparta.blog.dto.comment;
 
 import lombok.Getter;
 

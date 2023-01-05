@@ -1,18 +1,19 @@
 package com.sparta.blog.service;
 
-import com.sparta.blog.dto.request.CommentRequestDto;
-import com.sparta.blog.dto.response.CommentResponseDto;
-import com.sparta.blog.entity.*;
+import com.sparta.blog.dto.comment.CommentRequestDto;
+import com.sparta.blog.dto.comment.CommentResponseDto;
+import com.sparta.blog.entity.Comment;
+import com.sparta.blog.entity.CommentLike;
+import com.sparta.blog.entity.Post;
+import com.sparta.blog.entity.User;
 import com.sparta.blog.repository.CommentLikeRepository;
-import com.sparta.blog.repository.PostRepository;
 import com.sparta.blog.repository.CommentRepository;
+import com.sparta.blog.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -27,13 +28,13 @@ public class CommentService {
     public CommentResponseDto createComment(Long postId, CommentRequestDto commentRequestDto, User user) {
 
         Post post = postRepository.findById(postId).orElseThrow(
-                () -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다.")
+                () -> new IllegalArgumentException("Not found post")
         );
         Comment comments = null;
         //코멘트 번호 유효성 검사
         if (!commentRequestDto.isZeroId()) {  //id값이 0이 아니라면
             comments = commentRepository.findById(commentRequestDto.getId()).orElseThrow(
-                    () -> new IllegalArgumentException("해당 코멘트가 존재하지 않습니다.")
+                    () -> new IllegalArgumentException("Not found comment")
             );
         }
         Comment comment = null;
@@ -65,51 +66,51 @@ public class CommentService {
     @Transactional
     public CommentResponseDto updateComment(Long postId, Long commentId, CommentRequestDto requestDto, User user) {
         Post post = postRepository.findById(postId).orElseThrow(
-                () -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다.")
+                () -> new IllegalArgumentException("Not found post")
         );
         Comment comment = commentRepository.findById(commentId).orElseThrow(
-                () -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다.")
+                () -> new IllegalArgumentException("Not found comment")
         );
-        if (comment.isCommentWriter(user.getUsername())) { // 댓글의 작성자가 필요하네!!!!
+        if (comment.isCommentWriter(user.getUsername())) {
             comment.updateComment(requestDto);
             return new CommentResponseDto(comment);
         } else {
-            throw new IllegalArgumentException("작성자만 수정이 가능합니다.");
+            throw new IllegalArgumentException("Invalid user");
         }
     }
 
     @Transactional
     public ResponseEntity<String> deleteComment(Long postId, Long commentId, User user) {
         Post post = postRepository.findById(postId).orElseThrow(
-                () -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다.")
+                () -> new IllegalArgumentException("Not found post")
         );
         Comment comment = commentRepository.findById(commentId).orElseThrow(
-                () -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다.")
+                () -> new IllegalArgumentException("Not found comment")
         );
         if (comment.isCommentWriter(user.getUsername())) { // 댓글의 작성자가 필요하네!!!!
             commentRepository.delete(comment);
-            return new ResponseEntity<>("해당 댓글이 삭제되었습니다.", HttpStatus.OK);
+            return new ResponseEntity<>("Success delete comment", HttpStatus.OK);
         } else {
-            throw new IllegalArgumentException("작성자만 삭제가 가능합니다.");
+            throw new IllegalArgumentException("Invalid user");
         }
     }
 
     @Transactional
     public ResponseEntity<String> likeComment(Long commentId, String username) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(
-                () -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다.")
+                () -> new IllegalArgumentException("Not found comment")
         );
         commentLikeRepository.save(new CommentLike(username, comment));
-        return new ResponseEntity<>("You liked the comment", HttpStatus.OK);
+        return new ResponseEntity<>("Success like comment", HttpStatus.OK);
     }
 
     @Transactional
     public ResponseEntity<String> cancelLikedComment(Long commentId, String username) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(
-                () -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다.")
+                () -> new IllegalArgumentException("Not found comment")
         );
         commentLikeRepository.deleteByCommentIdAndUsername(commentId, username);
-        return new ResponseEntity<>("You canceled the like on the post", HttpStatus.OK);
+        return new ResponseEntity<>("Cancel like comment", HttpStatus.OK);
     }
 
 }

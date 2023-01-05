@@ -1,4 +1,4 @@
-package com.sparta.blog.dto.response;
+package com.sparta.blog.dto.post;
 
 import com.sparta.blog.entity.PostLike;
 import lombok.Getter;

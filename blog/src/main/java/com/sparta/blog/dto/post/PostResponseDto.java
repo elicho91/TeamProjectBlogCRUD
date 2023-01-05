@@ -1,7 +1,7 @@
-package com.sparta.blog.dto.response;
+package com.sparta.blog.dto.post;
 
+import com.sparta.blog.dto.comment.CommentResponseDto;
 import com.sparta.blog.entity.Post;
-import com.sparta.blog.entity.Comment;
 import com.sparta.blog.entity.PostLike;
 import lombok.Getter;
 

@@ -1,5 +1,6 @@
-package com.sparta.blog.category;
+package com.sparta.blog.repository;
 
+import com.sparta.blog.entity.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,8 +1,8 @@
 package com.sparta.blog.controller;
 
-import com.sparta.blog.dto.request.PageRequestDTO;
-import com.sparta.blog.dto.request.PostRequestDto;
-import com.sparta.blog.dto.response.PostResponseDto;
+import com.sparta.blog.dto.page.PageResponseDto;
+import com.sparta.blog.dto.post.PostRequestDto;
+import com.sparta.blog.dto.post.PostResponseDto;
 import com.sparta.blog.entity.PostLike;
 import com.sparta.blog.jwt.JwtUtil;
 import com.sparta.blog.repository.PostLikeRepository;
@@ -41,47 +41,47 @@ public class PostController {
 
     @GetMapping("/posts/page")
     @Operation(summary = "Get paging post ", description = "Get paging post Page")
-    public List<PostResponseDto> getPagingPost(@RequestBody PageRequestDTO pageRequestDTO){
-        return postService.getPagingPost(pageRequestDTO);
+    public List<PostResponseDto> getPagingPost(@RequestBody PageResponseDto pageResponseDTO){
+        return postService.getPagingPost(pageResponseDTO);
     }
 
-    @GetMapping("/posts/{postId}")
+    @GetMapping("/posts/{id}")
     @Operation(summary = "View only one post ", description = "View only one post Page")
-    public PostResponseDto getPost(@PathVariable Long postId) {
-        return postService.getPosts(postId);
+    public PostResponseDto getPost(@PathVariable Long id) {
+        return postService.getPost(id);
     }
 
-    @PutMapping("/posts/{postId}")
+    @PutMapping("/posts/{id}")
     @Operation(summary = "Update Post", description = "Update post Page")
-    public PostResponseDto updatePost(@PathVariable Long postId, @RequestBody PostRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return postService.updatePost(postId, requestDto, userDetails.getUser().getUsername());
+    public PostResponseDto updatePost(@PathVariable Long id, @RequestBody PostRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return postService.updatePost(id, requestDto, userDetails.getUser().getUsername());
     }
 
-    @DeleteMapping("/posts/{postId}")
+    @DeleteMapping("/posts/{id}")
     @Operation(summary = "Delete Post", description = "Delete post Page")
-    public ResponseEntity<String> deletePost(@PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return postService.deletePost(postId, userDetails.getUser().getUsername());
+    public ResponseEntity<String> deletePost(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return postService.deletePost(id, userDetails.getUser().getUsername());
     }
 
-    @PostMapping("/posts/{postId}/like")
+    @PostMapping("/heart/posts/{id}")
     @Operation(summary = "Like post", description = "Like post Page")
-    public ResponseEntity<String> likePost(@PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<String> likePost(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         String username = userDetails.getUsername();
-        PostLike postLike = postLikeRepository.findByUsernameAndPostId(username, postId);
+        PostLike postLike = postLikeRepository.findByUsernameAndPostId(username, id);
         if (postLike == null) {
-            return postService.likePost(postId, username);
+            return postService.likePost(id, username);
         } else {
             throw new IllegalArgumentException("You already did like on the post");
         }
     }
 
-    @DeleteMapping("/posts/{postId}/like")
+    @DeleteMapping("/heart/posts/{id}")
     @Operation(summary = "Cancel liked post", description = "Cancel liked post Page")
-    public ResponseEntity<String> cancelLikedPost(@PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<String> cancelLikedPost(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         String username = userDetails.getUsername();
-        PostLike postLike = postLikeRepository.findByUsernameAndPostId(username, postId);
+        PostLike postLike = postLikeRepository.findByUsernameAndPostId(username, id);
         if (postLike != null) {
-            return postService.cancelLikedPost(postId, username);
+            return postService.cancelLikedPost(id, username);
         } else {
             throw new IllegalArgumentException("You didn't like on the post");
         }

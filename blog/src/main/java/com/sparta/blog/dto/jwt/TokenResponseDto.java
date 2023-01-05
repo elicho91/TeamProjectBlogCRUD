@@ -1,4 +1,4 @@
-package com.sparta.blog.dto.response;
+package com.sparta.blog.dto.jwt;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
